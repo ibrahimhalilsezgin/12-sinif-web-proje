@@ -1,20 +1,33 @@
 <?php
 session_start();
 
+// .env loader function
+function loadEnv($path) {
+    if(!file_exists($path)) return;
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        putenv(trim($name) . '=' . trim($value));
+        $_ENV[trim($name)] = trim($value);
+    }
+}
+loadEnv(__DIR__ . '/../.env');
+
 // Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'eticaret');
-define('DB_USER', 'root');
-define('DB_PASS', '123123');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'eticaret');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '123123');
 
 // Iyzico API configuration
-define('IYZICO_API_KEY', 'your_api_key');
-define('IYZICO_SECRET_KEY', 'your_secret_key');
-define('IYZICO_BASE_URL', 'https://sandbox-api.iyzipay.com'); // Use https://api.iyzipay.com for production
+define('IYZICO_API_KEY', getenv('IYZICO_API_KEY') ?: 'your_api_key');
+define('IYZICO_SECRET_KEY', getenv('IYZICO_SECRET_KEY') ?: 'your_secret_key');
+define('IYZICO_BASE_URL', getenv('IYZICO_BASE_URL') ?: 'https://sandbox-api.iyzipay.com');
 
 // App configuration
-define('APP_NAME', 'Store PHP');
-define('BASE_URL', 'http://localhost:8000/'); // Adjusted to match your running server
+define('APP_NAME', getenv('APP_NAME') ?: 'Store PHP');
+define('BASE_URL', getenv('BASE_URL') ?: 'http://localhost:8000/');
 
 // Core functions
 function redirect($url) {

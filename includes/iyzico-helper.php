@@ -1,36 +1,36 @@
 <?php
-/**
- * Iyzico Helper Class (Simple Integration)
- * For production, use $ composer require iyzipay/iyzipay-php
- */
 class IyzicoHelper {
     public static function createForm($data) {
         $apiKey = IYZICO_API_KEY;
         $secretKey = IYZICO_SECRET_KEY;
         $baseUrl = IYZICO_BASE_URL;
 
-        // In a real scenario, you'd construct the JSON for Iyzipay API
-        // This is a placeholder for the logic.
-        // For development, we'll simulate a successful form generation.
+        // Split Name and Surname
+        $nameParts = explode(' ', trim($data['name']));
+        $surname = array_pop($nameParts);
+        $name = implode(' ', $nameParts);
+        if (empty($name)) { $name = $surname; $surname = 'Bey/Hanim'; }
+
+        $totalPrice = 0;
+        foreach($data['items'] as $item) $totalPrice += $item['price'] * $item['quantity'];
         
-        $total = 0;
-        foreach($data['items'] as $item) $total += $item['price'] * $item['quantity'];
+        $formattedPrice = number_format($totalPrice, 2, '.', '');
 
         $request = [
             'locale' => 'tr',
-            'conversationId' => $data['order_id'],
-            'price' => $total,
-            'paidPrice' => $total,
+            'conversationId' => (string)$data['order_id'],
+            'price' => $formattedPrice,
+            'paidPrice' => $formattedPrice,
             'currency' => 'TRY',
             'basketId' => 'B' . $data['order_id'],
             'paymentGroup' => 'PRODUCT',
-            'callbackUrl' => BASE_URL . 'payment-callback.php',
+            'callbackUrl' => BASE_URL . 'payment-callback.php?id=' . $data['order_id'],
             'enabledInstallments' => [1, 2, 3, 6, 9],
             'buyer' => [
-                'id' => $data['user_id'],
-                'name' => $data['name'],
-                'surname' => 'User',
-                'gsmNumber' => $data['phone'],
+                'id' => (string)$data['user_id'],
+                'name' => $name,
+                'surname' => $surname,
+                'gsmNumber' => !empty($data['phone']) ? $data['phone'] : '+905000000000',
                 'email' => $data['email'],
                 'identityNumber' => '11111111111',
                 'lastLoginDate' => date('Y-m-d H:i:s'),
@@ -58,17 +58,38 @@ class IyzicoHelper {
             'basketItems' => []
         ];
 
-        foreach($data['items'] as $item) {
+        foreach($data['items'] as $id => $item) {
+            $itemTotal = number_format($item['price'] * $item['quantity'], 2, '.', '');
             $request['basketItems'][] = [
-                'id' => 'BI' . rand(100, 999),
-                'name' => $item['name'],
-                'category1' => 'General',
+                'id' => 'BI' . $id,
+                'name' => $item['name'] ?? 'Ürün',
+                'category1' => 'Genel',
                 'itemType' => 'PHYSICAL',
-                'price' => $item['price']
+                'price' => $itemTotal 
             ];
         }
 
-        return $request; // In real, this returns the API result
+        $jsonRequest = json_encode($request);
+        $rnd = uniqid();
+        
+        // Iyzico IYZWSv2 Signature Generation (HEX Format)
+        $signature = hash_hmac('sha256', $rnd . $jsonRequest, $secretKey);
+        $authorization = 'IYZWSv2 ' . $apiKey . ':' . $signature;
+
+        $ch = curl_init($baseUrl . '/payment/iyzipay/checkoutform/initialize/auth/v3');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonRequest);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: ' . $authorization,
+            'x-iyzi-rnd: ' . $rnd
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response);
     }
 }
 ?>

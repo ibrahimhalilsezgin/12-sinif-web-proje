@@ -47,18 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body style="background: #f8fafc;">
     <div class="panel-grid">
-        <aside class="panel-sidebar">
-            <nav>
-                <div style="margin-bottom: 40px; padding: 0 20px;">
-                    <a href="../index.php" class="logo" style="color: white;">STORE<span>.PHP</span></a>
-                </div>
-                <a href="dashboard.php" class="menu-link">🏠 Dashboard</a>
-                <a href="products.php" class="menu-link active">📦 Ürünlerim</a>
-                <a href="orders.php" class="menu-link">📃 Siparişler</a>
-                <a href="../logout.php" class="menu-link" style="color: #f87171;">Çıkış Yap</a>
-            </nav>
-        </aside>
-
+        <?php include 'sidebar.php'; ?>
         <main class="panel-main">
             <header style="margin-bottom: 48px;">
                 <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -1.5px; color: var(--secondary);">Ürünü Düzenle</h1>
@@ -66,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </header>
 
             <form method="POST" class="card" style="padding: 48px; max-width: 900px;">
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px; margin-bottom: 32px;">
+                <div class="responsive-grid" style="margin-bottom: 32px;">
                     <div style="display: flex; flex-direction: column; gap: 24px;">
                         <div>
                             <label>Ürün Adı</label>

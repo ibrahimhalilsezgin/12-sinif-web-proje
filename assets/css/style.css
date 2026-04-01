@@ -275,6 +275,7 @@ header {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    line-clamp: 2;
     overflow: hidden;
 }
 
@@ -325,12 +326,37 @@ header {
     position: sticky;
     top: 0;
     height: 100vh;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2000;
 }
 
 .panel-main {
     flex: 1;
     background: #f8fafc;
     padding: 48px;
+    min-width: 0;
+}
+
+/* Sidebar active on mobile */
+@media (max-width: 768px) {
+    .panel-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+    }
+    .panel-sidebar.active {
+        transform: translateX(0);
+    }
+    .panel-main {
+        padding: 24px 20px;
+    }
+}
+
+.d-md-none { display: none !important; }
+@media (max-width: 768px) {
+    .d-md-none { display: flex !important; }
+    .d-none-mobile { display: none !important; }
 }
 
 .menu-link {
@@ -388,4 +414,115 @@ footer {
     background: var(--secondary);
     color: #94a3b8;
     margin-top: 120px;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ============================================= */
+
+@media (max-width: 1024px) {
+    .hero h1 { font-size: 3.5rem; letter-spacing: -2px; }
+    .panel-sidebar { width: 220px; }
+    .panel-main { padding: 32px; }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    
+    /* Premium Mobile Header */
+    header { height: auto; padding: 12px 0; }
+    .nav-wrapper { height: auto; padding: 0; flex-direction: column; justify-content: center; gap: 16px; }
+    .nav-links { display: flex; width: 100%; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .nav-item { font-size: 0.85rem; padding: 6px; }
+    .btn { padding: 8px 16px; font-size: 0.85rem; }
+
+    /* Hero Refinement */
+    .hero { padding: 60px 0 80px; margin-bottom: 0; }
+    .hero h1 { font-size: 2.2rem; letter-spacing: -2px; }
+    .hero p { font-size: 1rem; }
+    
+    /* Force 2 Columns on Mobile for better density */
+    .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .product-card { padding: 10px; border-radius: 20px; }
+    .product-name { font-size: 0.95rem; margin-bottom: 8px; }
+    .product-meta { font-size: 0.75rem; }
+    .price-tag { font-size: 1.1rem; }
+    .add-btn { width: 36px; height: 36px; border-radius: 10px; }
+    
+    /* Footer & Page Adjustments */
+    main { padding-bottom: 40px; }
+    .section-title { font-size: 1.6rem; }
+    .card { padding: 20px; border-radius: 24px; }
+}
+
+/* =============================================
+   UNIVERSAL RESPONSIVE UTILITIES
+   ============================================= */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Grid Utilities */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.grid-sidebar { display: grid; grid-template-columns: 280px 1fr; gap: 40px; }
+
+/* Desktop overrides / Tablet fixes */
+@media (max-width: 1024px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-sidebar { grid-template-columns: 220px 1fr; gap: 24px; }
+}
+
+@media (max-width: 992px) {
+    .responsive-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4, .grid-sidebar {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    
+    .panel-grid {
+        flex-direction: column;
+    }
+    .panel-sidebar {
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        position: relative;
+    }
+    
+    footer .container.grid-4 {
+        margin-bottom: 30px !important;
+    }
+    
+    .profile-header .container {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.card {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 }

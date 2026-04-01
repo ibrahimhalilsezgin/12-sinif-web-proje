@@ -64,7 +64,7 @@ $current_status = $status_badge[$store['status']] ?? $status_badge['pending'];
         <?php include 'sidebar.php'; ?>
 
         <main class="panel-main">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px;">
+            <header style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 48px;">
                 <div>
                     <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -1.5px; color: var(--secondary);">
                         <?php echo $store['store_name']; ?>
@@ -76,7 +76,7 @@ $current_status = $status_badge[$store['status']] ?? $status_badge['pending'];
                 <a href="product-add.php" class="btn btn-primary">+ Yeni Ürün Ekle</a>
             </header>
 
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 48px;">
+            <div class="grid-3" style="margin-bottom: 48px;">
                 <div class="v-stat-card">
                     <span class="v-stat-label">Envanter</span>
                     <span class="v-stat-val"><?php echo $total_products; ?></span>

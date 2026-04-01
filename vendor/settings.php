@@ -41,21 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['store_name'])) {
 </head>
 <body style="background: #f8fafc;">
     <div class="panel-grid">
-        <aside class="panel-sidebar">
-            <div style="margin-bottom: 40px; padding: 0 20px;">
-                <a href="../index.php" class="logo" style="color: white; font-size: 1.5rem;">STORE<span>.PHP</span></a>
-                <p style="font-size: 0.75rem; color: #64748b; margin-top: 5px;">MAĞAZA YÖNETİMİ</p>
-            </div>
-            <nav>
-                <a href="dashboard.php" class="menu-link">🏠 Dashboard</a>
-                <a href="products.php" class="menu-link">📦 Ürünlerim</a>
-                <a href="settings.php" class="menu-link active">⚙️ Ayarlar</a>
-                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <a href="../logout.php" class="menu-link" style="color: #f87171;">Çıkış Yap</a>
-                </div>
-            </nav>
-        </aside>
-
+        <?php include 'sidebar.php'; ?>
         <main class="panel-main">
             <header style="margin-bottom: 48px;">
                 <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -1.5px; color: var(--secondary);">Mağaza Ayarları</h1>

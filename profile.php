@@ -3,6 +3,7 @@ require_once 'includes/db.php';
 check_login(); // Sadece giriş yapmış kullanıcılar görebilir
 
 $user_id = $_SESSION['user_id'];
+$title = "Profilim";
 
 // Siparişleri çek (En yeni en üstte)
 try {
@@ -15,132 +16,115 @@ try {
 
 // Durum etiketleri için stil ve yazı eşleştirme
 $status_map = [
-    'pending'   => ['label' => 'Ödeme Bekliyor', 'class' => 'badge-warning'],
-    'paid'      => ['label' => 'Ödendi / Hazırlanıyor', 'class' => 'badge-success'],
-    'shipped'   => ['label' => 'Kargoya Verildi', 'class' => 'badge-info'],
-    'completed' => ['label' => 'Tamamlandı', 'class' => 'badge-primary'],
-    'cancelled' => ['label' => 'İptal Edildi', 'class' => 'badge-danger']
+    'pending'   => ['label' => 'Ödeme Bekliyor', 'class' => 'bg-warning text-dark'],
+    'paid'      => ['label' => 'Ödendi / Hazırlanıyor', 'class' => 'bg-success'],
+    'shipped'   => ['label' => 'Kargoya Verildi', 'class' => 'bg-info'],
+    'completed' => ['label' => 'Tamamlandı', 'class' => 'bg-primary'],
+    'cancelled' => ['label' => 'İptal Edildi', 'class' => 'bg-danger']
 ];
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profilim | <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        .badge {
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: inline-block;
-        }
-        .badge-warning { background: #fef3c7; color: #d97706; }
-        .badge-success { background: #dcfce7; color: #16a34a; }
-        .badge-info { background: #e0f2fe; color: #0284c7; }
-        .badge-primary { background: #e0e7ff; color: #4338ca; }
-        .badge-danger { background: #fee2e2; color: #dc2626; }
-        
-        .profile-header {
-            background: var(--secondary);
-            color: white;
-            padding: 60px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-    </style>
-</head>
-<body style="background: #f8fafc;">
-    <header>
-        <div class="container nav-wrapper">
-            <a href="index.php" class="logo">STORE<span>.PHP</span></a>
-            <div class="nav-links">
-                <a href="index.php" class="nav-item">Mağazaya Dön</a>
-                <a href="cart.php" class="btn btn-outline" style="border-radius: 100px;">🛒 Sepet</a>
-                <a href="logout.php" style="color:var(--danger); font-weight: 700;">Çıkış Yap</a>
-            </div>
-        </div>
-    </header>
 
-    <div class="profile-header">
-        <div class="container" style="display: flex; align-items: center; gap: 24px;">
-            <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: white;">
-                <?php echo mb_substr($_SESSION['user_name'], 0, 1); ?>
+include 'includes/header.php';
+?>
+
+<div class="bg-dark text-white py-5">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-auto">
+                <div class="bg-primary rounded-4 d-flex align-items-center justify-content-center text-white fw-bold display-5 shadow" style="width: 100px; height: 100px;">
+                    <?php echo mb_substr($_SESSION['user_name'], 0, 1); ?>
+                </div>
             </div>
-            <div>
-                <h1 style="margin-bottom: 4px;"><?php echo $_SESSION['user_name']; ?></h1>
-                <p style="opacity: 0.7;"><?php echo $_SESSION['user_email']; ?> • Üye Profili</p>
+            <div class="col text-center text-md-start">
+                <h1 class="fw-bold mb-1 display-5"><?php echo $_SESSION['user_name']; ?></h1>
+                <p class="mb-0 opacity-75 fs-5"><?php echo $_SESSION['user_email']; ?> • Üye Profili</p>
             </div>
         </div>
     </div>
+</div>
 
-    <main class="container" style="padding: 60px 0;">
-        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 40px;">
-            <!-- Yan Menü -->
-            <aside>
-                <div class="card" style="padding: 20px;">
-                    <a href="profile.php" class="btn btn-primary" style="width: 100%; justify-content: flex-start; border-radius: 12px; margin-bottom: 8px;">📦 Siparişlerim</a>
-                    <a href="#" class="btn btn-outline" style="width: 100%; justify-content: flex-start; border-radius: 12px; border: none; color: var(--text-muted);">👤 Hesap Ayarları</a>
-                    <a href="#" class="btn btn-outline" style="width: 100%; justify-content: flex-start; border-radius: 12px; border: none; color: var(--text-muted);">📍 Adreslerim</a>
+<main class="container py-5 mt-n5">
+    <div class="row g-4">
+        <!-- Yan Menü -->
+        <aside class="col-lg-3 col-md-4 mt-n4">
+            <div class="card shadow-sm border-0 sticky-top p-2" style="top: 100px; border-radius: 20px;">
+                <div class="nav flex-column nav-pills gap-2">
+                    <a href="profile.php" class="nav-link active rounded-3 py-3 px-4 fw-bold shadow-sm">
+                        📦 Siparişlerin
+                    </a>
+                    <a href="#" class="nav-link text-dark rounded-3 py-3 px-4 fw-semibold opacity-75">
+                        👤 Hesap Ayarları
+                    </a>
+                    <a href="#" class="nav-link text-dark rounded-3 py-3 px-4 fw-semibold opacity-75">
+                        📍 Adreslerim
+                    </a>
+                    <hr class="my-2 mx-3 opacity-10">
+                    <a href="logout.php" class="nav-link text-danger rounded-3 py-3 px-4 fw-bold">
+                        Çıkış Yap
+                    </a>
                 </div>
-            </aside>
+            </div>
+        </aside>
 
-            <!-- İçerik -->
-            <section>
-                <div class="card">
-                    <h2 style="margin-bottom: 24px; letter-spacing: -1px;">Sipariş Geçmişi</h2>
-
+        <!-- İçerik -->
+        <section class="col-lg-9 col-md-8">
+            <div class="card shadow-sm border-0 border-radius-lg overflow-hidden" style="border-radius: 24px;">
+                <div class="card-header bg-white border-0 p-4 pb-0">
+                    <h2 class="fw-bold text-dark mb-0 h3">Sipariş Geçmişi</h2>
+                </div>
+                <div class="card-body p-4">
                     <?php if(empty($orders)): ?>
-                        <div style="text-align: center; padding: 40px;">
-                            <div style="font-size: 3rem; margin-bottom: 16px;">🔍</div>
-                            <h3>Henüz siparişiniz yok.</h3>
-                            <p style="color: var(--text-muted); margin-bottom: 24px;">Harika ürünleri keşfetmek için mağazaya göz atın.</p>
-                            <a href="index.php" class="btn btn-primary">Alışverişe Başla</a>
+                        <div class="text-center py-5">
+                            <div class="display-1 mb-3 opacity-50">🔍</div>
+                            <h4 class="fw-bold opacity-75">Henüz siparişiniz yok.</h4>
+                            <p class="text-muted mb-4 small">Harika ürünleri keşfetmek için mağazaya göz atın.</p>
+                            <a href="index.php" class="btn btn-primary px-4 py-2">Alışverişe Başla</a>
                         </div>
                     <?php else: ?>
-                        <table class="cart-table" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>Sipariş No</th>
-                                    <th>Tarih</th>
-                                    <th>Toplam</th>
-                                    <th>Durum</th>
-                                    <th>İşlem</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($orders as $order): 
-                                    $status = $status_map[$order['status']] ?? $status_map['pending'];
-                                ?>
-                                <tr>
-                                    <td><b style="color: var(--primary);">#<?php echo $order['id']; ?></b></td>
-                                    <td style="color: var(--text-muted); font-size: 0.9rem;">
-                                        <?php echo date('d.m.Y H:i', strtotime($order['created_at'])); ?>
-                                    </td>
-                                    <td><b><?php echo format_money($order['total_amount']); ?></b></td>
-                                    <td>
-                                        <span class="badge <?php echo $status['class']; ?>">
-                                            <?php echo $status['label']; ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">Detaylar</a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light opacity-50 small border-0 text-uppercase fw-bold">
+                                    <tr>
+                                        <th class="border-0">No</th>
+                                        <th class="border-0">Tarih</th>
+                                        <th class="border-0">Toplam</th>
+                                        <th class="border-0">Durum</th>
+                                        <th class="border-0 text-end">İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="border-0">
+                                    <?php foreach($orders as $order): 
+                                        $status = $status_map[$order['status']] ?? $status_map['pending'];
+                                    ?>
+                                    <tr class="border-bottom border-light">
+                                        <td class="py-3"><span class="fw-bold text-primary small">#<?php echo $order['id']; ?></span></td>
+                                        <td class="text-muted small"><?php echo date('d.m.Y H:i', strtotime($order['created_at'])); ?></td>
+                                        <td class="fw-bold"><?php echo format_money($order['total_amount']); ?></td>
+                                        <td>
+                                            <span class="badge <?php echo $status['class']; ?> rounded-pill px-3 py-2 small fw-bold">
+                                                <?php echo $status['label']; ?>
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a href="#" class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold">Detay</a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     <?php endif; ?>
                 </div>
-            </section>
-        </div>
-    </main>
+            </div>
+        </section>
+    </div>
+</main>
 
-    <footer style="background: var(--surface); color: var(--text-main); border-top: 1px solid var(--border); padding: 40px 0;">
-        <div class="container" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
-            &copy; 2026 Store PHP. Tüm Hakları Saklıdır.
-        </div>
-    </footer>
-</body>
-</html>
+<style>
+    .mt-n5 { margin-top: -3rem !important; }
+    .mt-n4 { margin-top: -2rem !important; }
+    .nav-pills .nav-link.active { background-color: var(--bs-primary); }
+    .table > :not(caption) > * > * { border-bottom-width: 0; }
+    .table-responsive { min-height: 300px; }
+</style>
+
+<?php include 'includes/footer.php'; ?>
